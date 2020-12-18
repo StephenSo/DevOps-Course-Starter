@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request
 
 from todo_app.flask_config import Config
 
@@ -44,18 +44,13 @@ def add_item(title):
 
 @app.route('/',methods = ['POST', 'GET'])
 def index():
-    if request.method == 'GET':
-        return render_template('index.html', items=get_items())
-
-@app.route('/NewItem.html',methods = ['POST', 'GET'])
-def newItemPage():
     if request.method == 'POST':
         result = request.form.get('newItem')
         add_item(title=result)
-        return redirect(url_for('index'))
-
+        return render_template('index.html', items=get_items())
+        
     if request.method == 'GET':
-        return render_template('NewItem.html')
+        return render_template('index.html', items=get_items())
 
 if __name__ == '__main__':
     app.run()
