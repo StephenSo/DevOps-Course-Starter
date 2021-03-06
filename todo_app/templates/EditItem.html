@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}To-Do App{% endblock %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">To-Do App</h1>
+    <p class="lead">Just another to-do app.</p>
+  </div>
+
+  <form action="" method="post" class="form-example">
+    <div class="form-example">
+      <label for="Item">Edit item: </label>
+      <input type="hidden" id="itemId" name="itemId" value="{{Item.id}}">
+      <input type="text" name="Item" id="Item" value= "{{Item.name}}" required ><br>
+      
+      <label for="Item">Description(optional): </label>
+      <input type="text" name="Description" id="Description" value= "{{Item.desc}}"><br>
+      <br>
+      {{ form.list_switcher() }}
+      <br>
+      <input type="submit" value="Update item">
+    </div>
+  </form>
+
+{% endblock %}
+
