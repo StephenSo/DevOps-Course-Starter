@@ -15,7 +15,6 @@ rootUrl = "https://api.trello.com/1"
 headers = {
     "Accept": "application/json"}
 
-
 def get_BoardId(BoardName):
     query = {
         'key': Config.KEY,
@@ -35,6 +34,7 @@ def get_BoardId(BoardName):
     else:
         Board = None
     return Board
+
 def find_list(trelloBoard,listName):
     url = rootUrl+"/boards/"+trelloBoard+"/lists"
     query = {
@@ -54,6 +54,7 @@ def find_list(trelloBoard,listName):
     else:
         List = None
     return List
+
 def get_List(id):
     url = rootUrl+"/lists/"+id
     query = {
@@ -67,6 +68,7 @@ def get_List(id):
     )
     output = (json.loads(getList.text))
     return output   
+
 def get_Items(todo_list):
     url = rootUrl+"/lists/"+todo_list+"/cards"
     query = {
@@ -80,6 +82,7 @@ def get_Items(todo_list):
     )
     output = (json.loads(cards.text))
     return output
+
 def add_Item(todo_list,name,desc):
     url = rootUrl+"/cards"
     query = {
@@ -88,7 +91,7 @@ def add_Item(todo_list,name,desc):
     query['idList'] = todo_list
     query['name'] = name
     query['desc'] = desc
-    query = requests.request(
+    newCard = requests.request(
         "POST",
         url,
         headers=headers,
@@ -96,6 +99,7 @@ def add_Item(todo_list,name,desc):
     )
     output = (json.loads(newCard.text))
     return output
+
 def get_Item(id):
     url = rootUrl+"/cards/"+id
     query = {
@@ -109,6 +113,7 @@ def get_Item(id):
     )
     output = (json.loads(getCard.text))
     return output
+
 def set_Item(itemId,name,desc,state):
     url = rootUrl+"/cards/"+itemId
     query = {
@@ -140,6 +145,7 @@ def index():
         return render_template('index.html',
             todoItems=get_Items(todo_list),
             doneItems = get_Items(find_list(trelloBoard,"Done")))
+
 @app.route('/NewItem.html',methods = ['POST', 'GET'])
 def newItemPage():
     if request.method == 'POST':
@@ -150,6 +156,7 @@ def newItemPage():
 
     if request.method == 'GET':
         return render_template('NewItem.html')
+
 @app.route('/EditItem.html',methods = ['POST', 'GET'])
 def editItemPage():
     if request.method == 'GET':
