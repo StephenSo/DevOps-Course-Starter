@@ -117,3 +117,17 @@ def set_Item(itemId,name,desc,state):
     )
     output = setCard.json()
     return output
+
+def delete_Item(id):
+    url = rootUrl+"/cards/"+id
+    query = {
+        'key': Config.KEY,
+        'token': Config.TOKEN}
+    getCard = requests.request(
+        "DELETE",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = getCard.json()
+    return output
