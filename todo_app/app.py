@@ -4,7 +4,7 @@ from wtforms import validators, RadioField
 from abc import ABC, abstractmethod
 
 from todo_app.flask_config import Config
-from .trello_requests import *
+from .trello_requests import get_BoardId,find_list,get_List,get_Items,add_Item,get_Item,set_Item
 
 # Thanks to https://stackoverflow.com/questions/25297716/how-to-make-radio-field-show-default-value-with-flask-and-wtforms
 # for the wtforms Radio Buttons. Only way I could do it after a lot of Googling.
