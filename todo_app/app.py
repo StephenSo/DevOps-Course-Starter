@@ -15,7 +15,6 @@ trelloBoard = get_BoardId(Config.BOARD_ID)
 
 class ListForm(FlaskForm):
     list_switcher = RadioField(choices=[('todo', 'To Do'), ('doing', 'Doing'), ('done', 'Done')],default='todo')
-
 class Lists():
     listName = "To Do"
     list_types_forward = {"To Do":"todo","Doing":"doing","Done":"done"}
@@ -37,16 +36,29 @@ class Lists():
     """def remove_items(self,name,desc):
         Items = self.listItems"""
 
+class ViewModel:
+    def __init__(self, todo,doing,done):
+        self._todo = todo
+        self._doing = doing
+        self._done = done
+    @property
+    def todo(self):
+        return self._todo
+    @property
+    def doing(self):
+        return self._doing
+    @property
+    def done(self):
+        return self._done
+
 if not trelloBoard:
     print("Board not found")
     exit()
 
 @app.route('/',methods = ['GET'])
 def index():
-    return render_template('index.html',
-        todoItems = Lists("To Do").listItems,
-        doingItems = Lists("Doing").listItems,
-        doneItems = Lists("Done").listItems)
+    viewLists = ViewModel(Lists("To Do").listItems,Lists("Doing").listItems,Lists("Done").listItems)
+    return render_template('index.html',view_model=viewLists)
 
 @app.route('/NewItem.html',methods = ['GET'])
 def get_newItemPage():

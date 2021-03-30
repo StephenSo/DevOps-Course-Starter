@@ -13,7 +13,7 @@
     <div class="col-md-12">
       <h2>To Do Items</h2>
       <ul class="list-group mb-4">
-        {% for item in todoItems %}
+        {% for item in view_model.todo %}
           <li><a href="/EditItem.html?id={{ item.id }}">{{item.name}} - {{item.desc}}</a></li>
         {% endfor %}
           </ul>
@@ -24,7 +24,7 @@
     <div class="col-md-12">
       <h2>Doing Items</h2>
       <ul class="list-group mb-4">
-        {% for item in doingItems %}
+        {% for item in view_model.doing %}
           <li><a href="/EditItem.html?id={{ item.id }}">{{item.name}} - {{item.desc}}</a></li>
         {% endfor %}
           </ul>
@@ -35,7 +35,7 @@
     <div class="col-md-12">
       <h2>Done Items</h2>
       <ul class="list-group mb-4">
-        {% for item in doneItems %}
+        {% for item in view_model.done %}
           <li><a href="/EditItem.html?id={{ item.id }}">{{item.name}} - {{item.desc}}</a></li>
         {% endfor %}
           </ul>
