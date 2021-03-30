@@ -1,61 +1,82 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, Markup
+from flask_wtf import FlaskForm
+from wtforms import validators, RadioField
+from abc import ABC, abstractmethod
 
 from todo_app.flask_config import Config
+from .trello_requests import *
+
+# Thanks to https://stackoverflow.com/questions/25297716/how-to-make-radio-field-show-default-value-with-flask-and-wtforms
+# for the wtforms Radio Buttons. Only way I could do it after a lot of Googling.
 
 app = Flask(__name__)
 app.config.from_object(Config)
+trelloBoard = get_BoardId(Config.BOARD_ID)
 
-_DEFAULT_ITEMS = [
-    { 'id': 1, 'status': 'Not Started', 'title': 'List saved todo items' },
-    { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
-]
+class ListForm(FlaskForm):
+    list_switcher = RadioField(choices=[('todo', 'To Do'), ('doing', 'Doing'), ('done', 'Done')],default='todo')
 
-def get_items():
-    """
-    Fetches all saved items from the session.
+class Lists():
+    listName = "To Do"
+    list_types_forward = {"To Do":"todo","Doing":"doing","Done":"done"}
+    list_types_reverse = {"todo":"To Do","doing":"Doing","done":"Done"}
+    def __init__(self,listtype):
+        self.listName = listtype
+        self.listKey = self.list_types_forward[self.listName]
+        self.listID = find_list(trelloBoard,self.listName)
+        self.listItems = get_Items(self.listID)
+    
+    def add_items(self,name,desc):
+        add_Item(self.listID,name,desc)
 
-    Returns:
-        list: The list of saved items.
-    """
-    return session.get('items', _DEFAULT_ITEMS)
+    """def set_Item(itemId,name,desc,idList):
+        Item = self.listItems
+        Item = Item[itemId]
+        set_Item(self.listID,name,desc)"""
 
-def add_item(title):
-    """
-    Adds a new item with the specified title to the session.
+    """def remove_items(self,name,desc):
+        Items = self.listItems"""
 
-    Args:
-        title: The title of the item.
+if not trelloBoard:
+    print("Board not found")
+    exit()
 
-    Returns:
-        item: The saved item.
-    """
-    items = get_items()
-
-    # Determine the ID for the item based on that of the previously added item
-    id = items[-1]['id'] + 1 if items else 0
-
-    item = { 'id': id, 'title': title, 'status': 'Not Started' }
-
-    # Add the item to the list
-    items.append(item)
-    session['items'] = items
-
-    return item
-
-@app.route('/',methods = ['POST', 'GET'])
+@app.route('/',methods = ['GET'])
 def index():
-    if request.method == 'GET':
-        return render_template('index.html', items=get_items())
+    return render_template('index.html',
+        todoItems = Lists("To Do").listItems,
+        doingItems = Lists("Doing").listItems,
+        doneItems = Lists("Done").listItems)
 
-@app.route('/NewItem.html',methods = ['POST', 'GET'])
-def newItemPage():
-    if request.method == 'POST':
-        result = request.form.get('newItem')
-        add_item(title=result)
-        return redirect(url_for('index'))
+@app.route('/NewItem.html',methods = ['GET'])
+def get_newItemPage():
+    return render_template('NewItem.html')
 
-    if request.method == 'GET':
-        return render_template('NewItem.html')
+@app.route('/NewItem.html',methods = ['POST'])
+def post_newItemPage():
+    Lists("To Do").add_items(request.form.get('newItem'),request.form.get('Description'))
+    return redirect(url_for('index'))
+
+@app.route('/EditItem.html',methods = ['GET'])
+def get_editItemPage():
+    itemId = request.args['id']
+    EditItem = get_Item(itemId)
+    List =  get_List(EditItem['idList'])
+    listForm = ListForm()
+    #listForm.list_switcher.data = "todo"
+    listForm.list_switcher.data = Lists(List["name"]).listKey
+    request.form.pop
+    return render_template('EditItem.html',Item=EditItem, form=listForm)
+
+@app.route('/EditItem.html',methods = ['POST'])
+def post_editItemPage():
+    EditItem = get_Item(request.form.get('itemId'))
+    edit_name = request.form.get('Item')
+    edit_desc = request.form.get('Description')
+    edit_list = Lists.list_types_reverse[request.form["list_switcher"]]
+    edit_listId = find_list((EditItem['idBoard']),edit_list)
+    set_Item(EditItem['id'],edit_name,edit_desc,edit_listId)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run()
