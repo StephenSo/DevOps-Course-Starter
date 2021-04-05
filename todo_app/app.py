@@ -27,20 +27,11 @@ class Lists():
     
     def add_items(self,name,desc):
         add_Item(self.listID,name,desc)
-
-    """def set_Item(itemId,name,desc,idList):
-        Item = self.listItems
-        Item = Item[itemId]
-        set_Item(self.listID,name,desc)"""
-
-    """def remove_items(self,name,desc):
-        Items = self.listItems"""
-
 class ViewModel:
     def __init__(self, todo,doing,done):
-        self._todo = todo
-        self._doing = doing
-        self._done = done
+        self._todo = Lists(todo).listItems
+        self._doing = Lists(doing).listItems
+        self._done = Lists(done).listItems
     @property
     def todo(self):
         return self._todo
@@ -51,14 +42,21 @@ class ViewModel:
     def done(self):
         return self._done
 
+    def update_lists(self):
+       self._todo = Lists("To Do").listItems
+       self._doing = Lists("Doing").listItems
+       self._done = Lists("Done").listItems
+
+view_lists = ViewModel(todo="To Do",doing="Doing",done="Done")
+
 if not trelloBoard:
     print("Board not found")
     exit()
 
 @app.route('/',methods = ['GET'])
 def index():
-    viewLists = ViewModel(Lists("To Do").listItems,Lists("Doing").listItems,Lists("Done").listItems)
-    return render_template('index.html',view_model=viewLists)
+    view_lists.update_lists()
+    return render_template('index.html',view_model=view_lists)
 
 @app.route('/NewItem.html',methods = ['GET'])
 def get_newItemPage():
@@ -71,23 +69,22 @@ def post_newItemPage():
 
 @app.route('/EditItem.html',methods = ['GET'])
 def get_editItemPage():
-    itemId = request.args['id']
-    EditItem = get_Item(itemId)
-    List =  get_List(EditItem['idList'])
-    listForm = ListForm()
-    #listForm.list_switcher.data = "todo"
-    listForm.list_switcher.data = Lists(List["name"]).listKey
+    item_id = request.args['id']
+    item = get_Item(item_id)
+    item_list =  get_List(item['idList'])
+    list_form = ListForm()
+    list_form.list_switcher.data = Lists(item_list["name"]).listKey
     request.form.pop
-    return render_template('EditItem.html',Item=EditItem, form=listForm)
+    return render_template('EditItem.html',Item=item, form=list_form)
 
 @app.route('/EditItem.html',methods = ['POST'])
 def post_editItemPage():
-    EditItem = get_Item(request.form.get('itemId'))
+    item = get_Item(request.form.get('itemId'))
     edit_name = request.form.get('Item')
     edit_desc = request.form.get('Description')
     edit_list = Lists.list_types_reverse[request.form["list_switcher"]]
-    edit_listId = find_list((EditItem['idBoard']),edit_list)
-    set_Item(EditItem['id'],edit_name,edit_desc,edit_listId)
+    edit_list_id = find_list((item['idBoard']),edit_list)
+    set_Item(item['id'],edit_name,edit_desc,edit_list_id)
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
