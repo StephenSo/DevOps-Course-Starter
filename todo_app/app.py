@@ -2,6 +2,7 @@ from flask import Flask, render_template, session, request, redirect, url_for, M
 from flask_wtf import FlaskForm
 from wtforms import validators, RadioField
 from abc import ABC, abstractmethod
+import datetime
 
 from todo_app.flask_config import Config
 from .trello_requests import get_BoardId,find_list,get_List,get_Items,add_Item,get_Item,set_Item
@@ -12,6 +13,9 @@ from .trello_requests import get_BoardId,find_list,get_List,get_Items,add_Item,g
 app = Flask(__name__)
 app.config.from_object(Config)
 trelloBoard = get_BoardId(Config.BOARD_ID)
+if not trelloBoard:
+    print("Board not found")
+    exit()
 
 class ListForm(FlaskForm):
     list_switcher = RadioField(choices=[('todo', 'To Do'), ('doing', 'Doing'), ('done', 'Done')],default='todo')
@@ -27,8 +31,9 @@ class Lists():
     
     def add_items(self,name,desc):
         add_Item(self.listID,name,desc)
+
 class ViewModel:
-    def __init__(self, todo,doing,done):
+    def __init__(self,todo="To Do",doing="Doing",done="Done",filter_done=True):
         self._todo = Lists(todo).listItems
         self._doing = Lists(doing).listItems
         self._done = Lists(done).listItems
@@ -40,21 +45,36 @@ class ViewModel:
         return self._doing
     @property
     def done(self):
-        return self._done
+        if len(self._done) < 5 or self._filter_done == False:
+            return self._done
+        done_today = [item for item in self._done if item['dateLastActivity'].split("T")[0] == (datetime.datetime.now()).strftime("%Y-%m-%d")]
+        return done_today
+    @property
+    def filter_done(self):
+        self._filter_done == filter_done
+        
+        return self._filter_done
 
     def update_lists(self):
        self._todo = Lists("To Do").listItems
        self._doing = Lists("Doing").listItems
        self._done = Lists("Done").listItems
+    def switch_filter(self):
+        if self._filter_done == True:
+            self._filter_done = False
+        else:
+            self._filter_done = True
 
-view_lists = ViewModel(todo="To Do",doing="Doing",done="Done")
-
-if not trelloBoard:
-    print("Board not found")
-    exit()
+view_lists = ViewModel("To Do","Doing","Done",True)
 
 @app.route('/',methods = ['GET'])
 def index():
+    view_lists.update_lists()
+    return render_template('index.html',view_model=view_lists)
+
+@app.route('/',methods = ['POST'])
+def switch_done_filter():
+    view_lists.switch_filter()
     view_lists.update_lists()
     return render_template('index.html',view_model=view_lists)
 

@@ -50,3 +50,31 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+
+## Running Developer Tests
+
+Test: ViewModel_test.py
+* This test validates the ViewModel class used in app.py. 
+
+    test_getDoneList
+        Validates the "Done" list.
+    
+    test_getDoingList
+        Validates the "Doing" list.
+    
+    test_getToDoList
+        Validates the "To Do" list.
+
+    test_show_less_than_5_done_unless_done_today
+        Tests if there are fewer than 5 completed tasks, show all of them
+        otherwise, only show tasks that have been completed today
+    
+    test_show_all_done_items
+        By setting filter_done to False, we should see all done items.
+    
+    test_recent_done_items
+        Tests if no 'filter_done', we should get items Done today
+
+    test_older_done_items
+        Test if 'filter_done=False', we should be able to get items done before today.
