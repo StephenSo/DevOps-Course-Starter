@@ -131,3 +131,48 @@ def delete_Item(id):
     )
     output = getCard.json()
     return output
+
+def create_trello_board(name):
+    url = rootUrl+"/boards/"
+    query = {
+        'key': Config().KEY,
+        'token': Config().TOKEN}
+    query['name'] = name
+    newBoard = requests.request(
+        "POST",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = newBoard.json()
+    return output
+
+def delete_trello_board(id):
+    url = rootUrl+"/boards/"+id
+    query = {
+        'key': Config().KEY,
+        'token': Config().TOKEN}
+    deleteBoard = requests.request(
+        "DELETE",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = deleteBoard.json()
+    return output
+
+def add_List(name,board_id):
+    url = rootUrl+"/lists"
+    query = {
+        'key': Config().KEY,
+        'token': Config().TOKEN}
+    query['name'] = name
+    query['idBoard'] = board_id
+    newCard = requests.request(
+        "POST",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = newCard.json()
+    return output    
