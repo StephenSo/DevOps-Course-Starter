@@ -23,8 +23,10 @@ def test_show_less_than_5_done_unless_done_today():
   assert len(done) < 5
 
 def test_show_all_done_items():
-  view_lists = ViewModel(filter_done=False)
-  assert len(view_lists.done) >= 0
+  view_lists = ViewModel()
+  if view_lists._filter_done:
+    view_lists.switch_filter()
+  assert not view_lists._filter_done
 
 def test_recent_done_items():
   view_lists = ViewModel()
@@ -32,7 +34,9 @@ def test_recent_done_items():
   assert len(done_today) == len(view_lists.done)
 
 def test_older_done_items():
-  view_lists = ViewModel(filter_done=False)
+  view_lists = ViewModel()
+  if view_lists._filter_done:
+    view_lists.switch_filter()
   older_done = [item for item in view_lists.doing if item['dateLastActivity'].split("T")[0] < (datetime.datetime.now()).strftime("%Y-%m-%d")]
   assert len(older_done) >= 0
 

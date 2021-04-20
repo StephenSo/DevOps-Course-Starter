@@ -14,8 +14,7 @@ from .trello_requests import get_BoardId,find_list,get_List,get_Items,add_Item,g
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
-
-    view_lists = ViewModel("To Do","Doing","Done",True)
+    view_lists = ViewModel()
 
     @app.route('/',methods = ['GET'])
     def index():
@@ -81,12 +80,12 @@ class Lists():
     
     def add_items(self,name,desc):
         add_Item(self.listID,name,desc)
-
 class ViewModel:
-    def __init__(self,todo="To Do",doing="Doing",done="Done",filter_done=True):
+    def __init__(self,todo="To Do",doing="Doing",done="Done"):
         self._todo = Lists(todo).listItems
         self._doing = Lists(doing).listItems
         self._done = Lists(done).listItems
+        self._filter_done = True
     @property
     def todo(self):
         return self._todo
@@ -99,16 +98,12 @@ class ViewModel:
             return self._done
         done_today = [item for item in self._done if item['dateLastActivity'].split("T")[0] == (datetime.datetime.now()).strftime("%Y-%m-%d")]
         return done_today
-    @property
-    def filter_done(self):
-        self._filter_done == filter_done
-        
-        return self._filter_done
 
     def update_lists(self):
        self._todo = Lists("To Do").listItems
        self._doing = Lists("Doing").listItems
        self._done = Lists("Done").listItems
+
     def switch_filter(self):
         if self._filter_done == True:
             self._filter_done = False
