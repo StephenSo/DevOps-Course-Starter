@@ -54,6 +54,7 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Running Developer Tests
 
+Unit testing:
 Test: ViewModel_test.py
 * This test validates the ViewModel class used in app.py. 
 
@@ -78,3 +79,31 @@ Test: ViewModel_test.py
 
     test_older_done_items
         Test if 'filter_done=False', we should be able to get items done before today.
+        
+Integration Test:
+Test: Integration_test.py
+
+    test_index_page
+        Validates initial page load.
+        
+    mock_edit_item
+        Checks updates to items in a list. 
+       
+End to end tests:
+Test: tests_e2e/test_sel.py
+
+    Create test List
+    test_list - Creates a 'test' list.
+
+    New item
+    set_Item = Takes the test item and sets it to the to do list
+    
+    Start item
+    set_Item = Creates a test item and adds it to the doing list
+
+    Complete Item
+    set_Item = Takes the test item and sets it to the to done list
+
+    Incomplete item
+    set_Item = Takes the test item and sets it back to the to doing list
+
