@@ -118,3 +118,7 @@ env/
 
 ### Configuration files ###
 .env
+
+
+### ESXi password
+.my_secret_file
