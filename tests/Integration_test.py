@@ -23,6 +23,9 @@ def client():
         yield client
 
 def test_index_page(mock_request,client):
+    # Replace call to requests.get(url) with our own function
+    mock_request.side_effect = mock_get_lists 
+    #response = client.request('/')
     response = client.get('/')
 
 def mock_get_lists(http_method,url,params,headers):
@@ -66,13 +69,8 @@ def mock_edit_item(http_method,url,params,headers):
     if url == f'https://api.trello.com/1/cards/603b8fd8acd0617a9083538c':
         response = Mock()
         # sample_trello_lists_response should point to some test response data
-        test_items = {
-            "dateLastActivity": "2021-04-05T14:41:54.021Z",
-            "desc": "Git",
-            "name": "Module 01",
-            "idList":"603b8faf893153146df47463"}
-        #json_payload = '{"id":"603b8fd8acd0617a9083538c","checkItemStates":[],"closed":false,"dateLastActivity":"2021-04-05T14:41:54.021Z","desc":"Git","descData":{"emoji":{}},"dueReminder":null,"idBoard":"603b8faf893153146df47462","idList":"603b8faf893153146df47463","idMembersVoted":[],"idShort":3,"idAttachmentCover":null,"idLabels":[],"manualCoverAttachment":false,"name":"Module 01","pos":65535,"shortLink":"JxpPj9Pj","isTemplate":false,"cardRole":null,"dueComplete":false,"due":null,"email":null,"labels":[],"shortUrl":"https://trello.com/c/JxpPj9Pj","start":null,"url":"https://trello.com/c/JxpPj9Pj/3-module-01","idMembers":[],"idChecklists":[],"badges":{"attachmentsByType":{"trello":{"board":0,"card":0}},"location":false,"votes":0,"viewingMemberVoted":false,"subscribed":false,"fogbugz":"","checkItems":0,"checkItemsChecked":0,"checkItemsEarliestDue":null,"comments":0,"attachments":0,"description":true,"due":null,"dueComplete":false,"start":null},"subscribed":false,"cover":{"idAttachment":null,"color":null,"idUploadedBackground":null,"size":"normal","brightness":"light","idPlugin":null}}'
-        response.json.return_value = test_items
+        json_payload = '{"id":"603b8fd8acd0617a9083538c","checkItemStates":[],"closed":false,"dateLastActivity":"2021-04-05T14:41:54.021Z","desc":"Git","descData":{"emoji":{}},"dueReminder":null,"idBoard":"603b8faf893153146df47462","idList":"603b8faf893153146df47463","idMembersVoted":[],"idShort":3,"idAttachmentCover":null,"idLabels":[],"manualCoverAttachment":false,"name":"Module 01","pos":65535,"shortLink":"JxpPj9Pj","isTemplate":false,"cardRole":null,"dueComplete":false,"due":null,"email":null,"labels":[],"shortUrl":"https://trello.com/c/JxpPj9Pj","start":null,"url":"https://trello.com/c/JxpPj9Pj/3-module-01","idMembers":[],"idChecklists":[],"badges":{"attachmentsByType":{"trello":{"board":0,"card":0}},"location":false,"votes":0,"viewingMemberVoted":false,"subscribed":false,"fogbugz":"","checkItems":0,"checkItemsChecked":0,"checkItemsEarliestDue":null,"comments":0,"attachments":0,"description":true,"due":null,"dueComplete":false,"start":null},"subscribed":false,"cover":{"idAttachment":null,"color":null,"idUploadedBackground":null,"size":"normal","brightness":"light","idPlugin":null}}'
+        response.json.return_value = json.loads(json_payload)
         return response
     
     if 'https://api.trello.com/1/lists/' in url:
@@ -84,35 +82,17 @@ def mock_edit_item(http_method,url,params,headers):
 
     if url == f'https://api.trello.com/1/members/me/boards':
         response = Mock()
-        json_payload = [
-            {"name":"SqmIler01",
-            "desc":"",
-            "descData":None,
-            "dateLastActivity":"2021-04-13T10:20:28.795Z",
-            "id":"603b8faf893153146df47462",
-            "url":"https://trello.com/b/6YqdMuoc/sqmiler01"}
-            ]
-        response.json.return_value = json_payload #json.loads(json_payload)
+        json_payload = '[{"name":"SqmIler01","desc":"","descData":null,"closed":false,"dateClosed":null,"idOrganization":"603b8b1b4f14c66e4eb6f86e","idEnterprise":null,"limits":null,"pinned":null,"shortLink":"6YqdMuoc","powerUps":[],"dateLastActivity":"2021-04-13T10:20:28.795Z","idTags":[],"datePluginDisable":null,"creationMethod":"automatic","ixUpdate":null,"enterpriseOwned":false,"idBoardSource":null,"idMemberCreator":"603b8b0570d61831289b3ec3","id":"603b8faf893153146df47462","starred":false,"url":"https://trello.com/b/6YqdMuoc/sqmiler01"}]'
+        response.json.return_value = json.loads(json_payload)
         return response
 
     if url == f'https://api.trello.com/1/boards/603b8faf893153146df47462/lists':
         response = Mock()
-        json_payload = [
-            {
-                "id":"603b8faf893153146df47463",
-                "name":"To Do",
-                "idBoard":"603b8faf893153146df47462"},
-            {
-                "id":"603b8faf893153146df47464",
-                "name":"Doing",
-                "idBoard":"603b8faf893153146df47462"},
-            {
-                "id":"603b8faf893153146df47465",
-                "name":"Done",
-                "idBoard":"603b8faf893153146df47462"}
-            ]
-        response.json.return_value = json_payload #json.loads(json_payload)
+        # sample_trello_lists_response should point to some test response data
+        json_payload = '[{"id":"603b8faf893153146df47463","name":"To Do","closed":false,"pos":16384,"softLimit":null,"idBoard":"603b8faf893153146df47462","subscribed":false},{"id":"603b8faf893153146df47464","name":"Doing","closed":false,"pos":32768,"softLimit":null,"idBoard":"603b8faf893153146df47462","subscribed":false},{"id":"603b8faf893153146df47465","name":"Done","closed":false,"pos":49152,"softLimit":null,"idBoard":"603b8faf893153146df47462","subscribed":false}]'
+        response.json.return_value = json.loads(json_payload)
         return response
+
 def test_editItem_page(mock_request,client):
     # Replace call to requests.get(url) with our own function
     mock_request.side_effect = mock_edit_item 

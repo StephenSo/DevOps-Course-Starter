@@ -10,7 +10,6 @@ from todo_app.trello_requests import *
 def driver():
     driver = webdriver.Firefox()
     yield driver
-    driver.close()
 
 @pytest.fixture(scope='module')
 def app_with_temp_board():

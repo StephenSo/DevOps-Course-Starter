@@ -14,7 +14,7 @@ from .trello_requests import get_BoardId,find_list,get_List,get_Items,add_Item,g
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
-    view_lists = ViewModel(Lists("To Do").listItems, Lists("Doing").listItems, Lists("Done").listItems)
+    view_lists = ViewModel()
 
     @app.route('/',methods = ['GET'])
     def index():
@@ -63,7 +63,6 @@ def create_app():
 
 class ListForm(FlaskForm):
     list_switcher = RadioField(choices=[('todo', 'To Do'), ('doing', 'Doing'), ('done', 'Done')],default='todo')
-
 class Lists():
     listName = "To Do"
     list_types_forward = {"To Do":"todo","Doing":"doing","Done":"done"}
@@ -81,12 +80,11 @@ class Lists():
     
     def add_items(self,name,desc):
         add_Item(self.listID,name,desc)
-
 class ViewModel:
-    def __init__(self,todo_items=[],doing_items=[],done_items=[]):
-        self._todo = todo_items
-        self._doing = doing_items
-        self._done = done_items
+    def __init__(self,todo="To Do",doing="Doing",done="Done"):
+        self._todo = Lists(todo).listItems
+        self._doing = Lists(doing).listItems
+        self._done = Lists(done).listItems
         self._filter_done = True
     @property
     def todo(self):
