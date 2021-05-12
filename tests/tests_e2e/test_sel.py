@@ -1,4 +1,4 @@
-import os,pytest,unittest
+import os,pytest,unittest,dotenv
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -13,9 +13,12 @@ def driver():
 
 @pytest.fixture(scope='module')
 def app_with_temp_board():
+    file_path = dotenv.find_dotenv('.env')
+    dotenv.load_dotenv(file_path, override=True)
     # Create the new board & update the board id environment variable
     response = create_trello_board("DeleteMe")
     os.environ['TRELLO_BOARD_ID'] = response['id']
+    os.environ['BOARD_ID'] = "DeleteMe" # Use to override default.
 
     # construct the new application
     application = create_app()

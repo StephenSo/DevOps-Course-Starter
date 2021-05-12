@@ -110,4 +110,3 @@ class ViewModel:
         else:
             self._filter_done = True
 
-app = create_app()
