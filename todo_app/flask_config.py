@@ -7,7 +7,7 @@ class Config:
         self.SECRET_KEY = os.environ.get('SECRET_KEY')
         self.KEY = os.environ.get('SECRET_APIKEY')
         self.TOKEN = os.environ.get('SECRET_APITOKEN')
-        self.BOARD_ID = os.environ.get('BOARD_ID')
+        self.BOARD_NAME = os.environ.get('BOARD_NAME')
         
         if not self.SECRET_KEY:
             raise ValueError("No SECRET_KEY set for Flask application. Did you follow the setup instructions?")
