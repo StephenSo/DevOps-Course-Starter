@@ -119,7 +119,15 @@ env/
 ### Configuration files ###
 .env
 
-
 ### ESXi password
 .my_secret_file
 geckodriver.log
+
+### Vagrant
+.vagrant/machines/*
+
+.vagrant/machines/default/vmware_esxi/action_provision
+.vagrant/machines/default/vmware_esxi/id
+.vagrant/machines/default/vmware_esxi/index_uuid
+.vagrant/machines/default/vmware_esxi/private_key
+.vagrant/machines/default/vmware_esxi/synced_folders
