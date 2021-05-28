@@ -122,4 +122,8 @@ env/
 
 ### ESXi password
 .my_secret_file
+
+# Other files & folders
 geckodriver.log
+.vscode/
+.vagrant/

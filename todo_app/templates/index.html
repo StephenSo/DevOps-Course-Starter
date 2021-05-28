@@ -14,7 +14,7 @@
       <h2>To Do Items</h2>
       <ul class="list-group mb-4">
         {% for item in view_model.todo %}
-          <li><a href="/EditItem.html?id={{ item.id }}">{{item.name}} - {{item.desc}}</a></li>
+          <li><a href="/EditItem.html?id={{ item.id }}" name="edit-{{item.name}}">{{item.name}} - {{item.desc}}</a></li>
         {% endfor %}
           </ul>
     </div>
@@ -25,7 +25,7 @@
       <h2>Doing Items</h2>
       <ul class="list-group mb-4">
         {% for item in view_model.doing %}
-          <li><a href="/EditItem.html?id={{ item.id }}">{{item.name}} - {{item.desc}}</a></li>
+          <li><a href="/EditItem.html?id={{ item.id }}" name="edit-{{item.name}}">{{item.name}} - {{item.desc}}</a></li>
         {% endfor %}
           </ul>
     </div>
@@ -36,7 +36,7 @@
       <h2>Done Items</h2>
       <ul class="list-group mb-4">
         {% for item in view_model.done %}
-          <li><a href="/EditItem.html?id={{ item.id }}">{{item.name}} - {{item.desc}}</a></li>
+          <li><a href="/EditItem.html?id={{ item.id }}" name="edit-{{item.name}}">{{item.name}} - {{item.desc}}</a></li>
         {% endfor %}
           </ul>
     </div>

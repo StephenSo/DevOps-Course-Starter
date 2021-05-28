@@ -35,16 +35,6 @@ $ cp .env.template .env # (first time only)
 
 ``` 
 
-## Install test dependencies
-
-```
-
-pip3 install pytest selenium python-dotenv flask flask_wtf
-
-```
-You will need to download the Firefox and Gecko driver executables and place them in the root.
-
-  
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 

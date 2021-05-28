@@ -149,7 +149,6 @@ def mock_edit_item(http_method,url,params,headers):
             "desc": "Git",
             "name": "Module 01",
             "idList":"603b8faf893153146df47463"}
-        #json_payload = '{"id":"603b8fd8acd0617a9083538c","checkItemStates":[],"closed":false,"dateLastActivity":"2021-04-05T14:41:54.021Z","desc":"Git","descData":{"emoji":{}},"dueReminder":null,"idBoard":"603b8faf893153146df47462","idList":"603b8faf893153146df47463","idMembersVoted":[],"idShort":3,"idAttachmentCover":null,"idLabels":[],"manualCoverAttachment":false,"name":"Module 01","pos":65535,"shortLink":"JxpPj9Pj","isTemplate":false,"cardRole":null,"dueComplete":false,"due":null,"email":null,"labels":[],"shortUrl":"https://trello.com/c/JxpPj9Pj","start":null,"url":"https://trello.com/c/JxpPj9Pj/3-module-01","idMembers":[],"idChecklists":[],"badges":{"attachmentsByType":{"trello":{"board":0,"card":0}},"location":false,"votes":0,"viewingMemberVoted":false,"subscribed":false,"fogbugz":"","checkItems":0,"checkItemsChecked":0,"checkItemsEarliestDue":null,"comments":0,"attachments":0,"description":true,"due":null,"dueComplete":false,"start":null},"subscribed":false,"cover":{"idAttachment":null,"color":null,"idUploadedBackground":null,"size":"normal","brightness":"light","idPlugin":null}}'
         response.json.return_value = json_payload
         return response
     
