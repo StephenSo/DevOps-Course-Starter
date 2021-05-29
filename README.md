@@ -106,17 +106,9 @@ To run all tests, `cd` into '''tests''' folder
 **End to end tests:**
 
 `poetry run pytest tests/tests_e2e/test_sel.py`
-Creates a test board named `DeleteMe`
+Initially creates a test board named `DeleteMe`
 
-*New item*
-`add_item` = Creates a test to do item, adding to the to do list
+*Lifecycle of a To Do Item*
+`test_item_journey` = Creates a test to do item ('test-item'), adding to the to do list
 
-*Start Item*
-`set_Item` = Takes the test item and sets it to the to doing list
-
-*Complete Item*
-`set_Item` = Takes the test item and sets it to the to done list
-
-*Incomplete item*
-`set_Item` = Takes the test item and sets it back to the to doing list
-
+Clean up: deletes the test board named `DeleteMe`
