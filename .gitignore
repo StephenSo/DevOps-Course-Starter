@@ -74,6 +74,7 @@ target/
 
 # pyenv
 .python-version
+.pyenv
 
 # celery beat schedule file
 celerybeat-schedule
@@ -118,7 +119,6 @@ env/
 
 ### Configuration files ###
 .env
-
 
 ### ESXi password
 .my_secret_file
