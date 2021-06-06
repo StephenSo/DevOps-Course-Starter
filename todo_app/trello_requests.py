@@ -7,8 +7,8 @@ headers = {
 
 def get_BoardId(BoardName):
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     url = rootUrl+"/members/me/boards"
     boards_response = requests.request(
         "GET",
@@ -28,8 +28,8 @@ def get_BoardId(BoardName):
 def find_list(trelloBoard,listName):
     url = rootUrl+"/boards/"+trelloBoard+"/lists"
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     board_response = requests.request(
         "GET",
         url,
@@ -45,8 +45,8 @@ def find_list(trelloBoard,listName):
 def get_List(id):
     url = rootUrl+"/lists/"+id
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     getList = requests.request(
         "GET",
         url,
@@ -59,8 +59,8 @@ def get_List(id):
 def get_Items(todo_list):
     url = rootUrl+"/lists/"+todo_list+"/cards"
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     cards = requests.request(
         "GET",
         url,
@@ -73,8 +73,8 @@ def get_Items(todo_list):
 def add_Item(todo_list,name,desc):
     url = rootUrl+"/cards"
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     query['idList'] = todo_list
     query['name'] = name
     query['desc'] = desc
@@ -90,8 +90,8 @@ def add_Item(todo_list,name,desc):
 def get_Item(id):
     url = rootUrl+"/cards/"+id
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     getCard = requests.request(
         "GET",
         url,
@@ -104,8 +104,8 @@ def get_Item(id):
 def set_Item(itemId,name,desc,state):
     url = rootUrl+"/cards/"+itemId
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     query['name'] = name
     query['desc'] = desc
     query['idList'] = state
@@ -121,8 +121,8 @@ def set_Item(itemId,name,desc,state):
 def delete_Item(id):
     url = rootUrl+"/cards/"+id
     query = {
-        'key': Config.KEY,
-        'token': Config.TOKEN}
+        'key': Config().KEY,
+        'token': Config().TOKEN}
     getCard = requests.request(
         "DELETE",
         url,
@@ -131,3 +131,48 @@ def delete_Item(id):
     )
     output = getCard.json()
     return output
+
+def create_trello_board(name):
+    url = rootUrl+"/boards/"
+    query = {
+        'key': Config().KEY,
+        'token': Config().TOKEN}
+    query['name'] = name
+    newBoard = requests.request(
+        "POST",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = newBoard.json()
+    return output
+
+def delete_trello_board(id):
+    url = rootUrl+"/boards/"+id
+    query = {
+        'key': Config().KEY,
+        'token': Config().TOKEN}
+    deleteBoard = requests.request(
+        "DELETE",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = deleteBoard.json()
+    return output
+
+def add_List(name,board_id):
+    url = rootUrl+"/lists"
+    query = {
+        'key': Config().KEY,
+        'token': Config().TOKEN}
+    query['name'] = name
+    query['idBoard'] = board_id
+    newCard = requests.request(
+        "POST",
+        url,
+        headers=headers,
+        params=query
+    )
+    output = newCard.json()
+    return output    
