@@ -14,7 +14,7 @@ from .trello_requests import get_BoardId,find_list,get_List,get_Items,add_Item,g
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
-    view_lists = ViewModel()
+    view_lists = ViewModel(Lists("To Do").listItems, Lists("Doing").listItems, Lists("Done").listItems)
 
     @app.route('/',methods = ['GET'])
     def index():
@@ -68,7 +68,7 @@ class Lists():
     list_types_forward = {"To Do":"todo","Doing":"doing","Done":"done"}
     list_types_reverse = {"todo":"To Do","doing":"Doing","done":"Done"}
     def __init__(self,listtype):
-        trelloboard = get_BoardId(Config().BOARD_ID)
+        trelloboard = get_BoardId(Config().BOARD_NAME)
         """    if not trelloBoard:
         print("Board not found")
         exit()
@@ -81,10 +81,10 @@ class Lists():
     def add_items(self,name,desc):
         add_Item(self.listID,name,desc)
 class ViewModel:
-    def __init__(self,todo="To Do",doing="Doing",done="Done"):
-        self._todo = Lists(todo).listItems
-        self._doing = Lists(doing).listItems
-        self._done = Lists(done).listItems
+    def __init__(self,todo_items=[],doing_items=[],done_items=[]):
+        self._todo = todo_items
+        self._doing = doing_items
+        self._done = done_items
         self._filter_done = True
     @property
     def todo(self):
