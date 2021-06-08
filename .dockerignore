@@ -14,7 +14,7 @@ geckodriver.log
 .vagrant/
 
 ### Git
-.github
+.github/
 
 ### Vscode
 .vscode/
