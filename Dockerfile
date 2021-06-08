@@ -51,6 +51,7 @@ RUN git clone https://github.com/pyenv/pyenv.git /home/todo/app/.pyenv/ \
 	&& pip install "poetry==$POETRY_VERSION" gunicorn flask flask_wtf \
 	&& poetry install --no-root \
 	&& chmod +x dev_entry_point.sh
+	# found chmod behaviour inconsistent. Had to check execute perms on host 1st
 
 EXPOSE 5001
 ENTRYPOINT ["./dev_entry_point.sh"]
