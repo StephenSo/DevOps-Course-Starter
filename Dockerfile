@@ -23,8 +23,8 @@ RUN apt-get update && apt-get install -y \
 	libxmlsec1-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
-USER todo
-WORKDIR /home/todo
+
+WORKDIR /home/todo/app
 
 ENV PYTHONFAULTHANDLER=1 \
   PYTHONUNBUFFERED=1 \
@@ -36,17 +36,14 @@ ENV PYTHONFAULTHANDLER=1 \
   PYENV_ROOT=/home/todo/app/.pyenv \
   PATH=$PYENV_ROOT/bin:/home/todo/.poetry/bin:/home/todo/.local/bin:$PATH
 
-COPY --chown=todo:todo ./app /home/todo/app
-#COPY ./app /home/todo/app
+#COPY --chown=todo:todo ./app /home/todo/app
+COPY ./ /home/todo/app
 
 RUN git clone https://github.com/pyenv/pyenv.git /home/todo/app/.pyenv/
-RUN pip install "poetry==$POETRY_VERSION" gunicorn
+RUN pip install "poetry==$POETRY_VERSION" gunicorn flask flask_wtf
+RUN poetry install --no-root --no-dev
+#USER todo
 
-# Copy only requirements to cache them in docker layer
+EXPOSE 5000
 
-
-# https://www.freecodecamp.org/news/docker-nginx-letsencrypt-easy-secure-reverse-proxy-40165ba3aee2/
-
-# https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-app-using-gunicorn-to-app-platform
-
-# https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04
+ENTRYPOINT ["gunicorn", "--bind", "172.17.0.3:5000", "wsgi:flask_app"]

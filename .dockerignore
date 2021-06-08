@@ -1,0 +1,25 @@
+### Virtual environment ###
+env/
+.venv/
+
+### Configuration files ###
+.env
+.env.template
+
+### ESXi password
+.my_secret_file
+geckodriver.log
+
+### Vagrant
+.vagrant/
+
+### Git
+.github
+
+### Vscode
+.vscode/
+
+## Python
+.pytest_cache/
+.pyenv/
+.poetry/

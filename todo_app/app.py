@@ -68,11 +68,12 @@ class Lists():
     list_types_forward = {"To Do":"todo","Doing":"doing","Done":"done"}
     list_types_reverse = {"todo":"To Do","doing":"Doing","done":"Done"}
     def __init__(self,listtype):
-        trelloboard = get_BoardId(Config().BOARD_NAME)
-        """    if not trelloBoard:
-        print("Board not found")
-        exit()
-        """
+        boardname = Config().BOARD_NAME
+        trelloboard = get_BoardId(boardname)
+        if not trelloboard:
+            raise ValueError(boardname+": Board not found, check your Trello account/Board name")
+            exit()
+       
         self.listName = listtype
         self.listKey = self.list_types_forward[self.listName]
         self.listID = find_list(trelloboard,self.listName)
