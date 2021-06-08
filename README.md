@@ -71,11 +71,12 @@ You should see output similar to the following:
 
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
-## Run app in Docker
+## Run the ToDo app in Docker
 
 Git clone the required application into a suitable folder (`./app`)
 ```bash
-$ git clone --branch module_4 https://github.com/StephenSo/DevOps-Course-Starter ./
+$ cd ./app
+$ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
 ```
 
 Change directory to the app folder and build the Docker image.
@@ -100,7 +101,7 @@ To remove the Docker container
  ```
 Now run the ToDo app interactivley in Docker.
 ```bash
-docker run --rm -p 5000:5000 todo-app \
+docker run --rm -p 5000:5000 \
     --env SECRET_KEY='secret-key' \
     --env SECRET_APIKEY='YOUR_TRELLO_API_KEY' \
     --env SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN' \
