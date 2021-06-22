@@ -22,7 +22,6 @@ EXPOSE 5000
 ENTRYPOINT ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:5000", "wsgi:flask_app"]
 
 FROM base as development
-
 COPY . .
 RUN pip install "poetry==$POETRY_VERSION" \
 	&& poetry install --no-root \
