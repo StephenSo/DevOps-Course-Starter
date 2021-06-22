@@ -2,13 +2,13 @@ version: "3"
 services:
   todo-app-dev:
     build:
-      context: /srv/dev-disk-by-label-Data01/QbitTorrentConfig/todo-app/app
+      context: .
     image: todo-app:dev
     container_name: todo-app-dev
     env_file:
      - ./.env
     volumes:
-      - /srv/dev-disk-by-label-Data01/QbitTorrentConfig/todo-app/app:/home/todo/app
+      - .:/home/todo/app
     ports:
       - 5001:5001 #dev port
     restart: unless-stopped

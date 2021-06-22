@@ -112,14 +112,20 @@ docker run --rm -p 5000:5000 \
 
 ## Run the ToDo app in Docker with prod and dev tags
 
-### Common to both:
+### Common to all:
 Git clone the required application into a suitable folder (`./app`)
 ```bash
 $ cd ./app
 $ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
 ```
 
-### Developer container
+### Docker Compose (recommended)
+
+docker compose up --build
+
+### Docker command
+
+#### Developer container
 
 Change directory to the app folder and build the Development Docker image.
 ```bash
@@ -141,7 +147,7 @@ To remove the Development Docker container
  docker container rm todo-app-dev
  ```
 
-### Production container
+#### Production container
 
 Change directory to the app folder and build the Development Docker image.
 ```bash
@@ -153,9 +159,9 @@ Now run the Production ToDo app in Docker.
 ```bash
 docker run --rm -d -p 5000:5000 \
 	--env SECRET_KEY='secret-key' \
-	--env SECRET_APIKEY='b97a4c7803029e10275ad6ad9f3618f7' \
-	--env SECRET_APITOKEN='bd1771cd50079b4791ad5e374df40ff4fbf14ceaa25b3ccb301fcd13c1ca0cf9' \
-	--env BOARD_NAME='Sqmiler01' \
+	--env SECRET_APIKEY='YOUR_TRELLO_API_KEY' \
+	--env SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN' \
+	--env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
 	--name todo-app-prod \
 	todo-app:prod
 ```

@@ -1,27 +1,5 @@
 FROM python:buster as base
 
-RUN apt-get update && apt-get install -y \
-	build-essential \
-	libssl-dev \
-	zlib1g-dev \
-	libbz2-dev \
-	libreadline-dev \
-	libsqlite3-dev \
-	wget \
-	curl \
-	llvm \
-	libncurses5-dev \
-	libncursesw5-dev \
-	xz-utils \
-	tk-dev \
-	libffi-dev \
-	liblzma-dev \
-	python-openssl \
-	git \
-	libxml2-dev \
-	libxmlsec1-dev \
-	&& rm -rf /var/lib/apt/lists/*
-
 WORKDIR /home/todo/app
 
 ENV PYTHONFAULTHANDLER=1 \
@@ -35,22 +13,20 @@ ENV PYTHONFAULTHANDLER=1 \
   PATH=$PYENV_ROOT/bin:/home/todo/.poetry/bin:/home/todo/.local/bin:$PATH
 
 FROM base as production
-COPY ./ /home/todo/app
+COPY . .
 RUN git clone https://github.com/pyenv/pyenv.git /home/todo/app/.pyenv/ \
-	&& pip install "poetry==$POETRY_VERSION" gunicorn flask flask_wtf \
+	&& pip install "poetry==$POETRY_VERSION" \
 	&& poetry install --no-root --no-dev
 
 EXPOSE 5000
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:flask_app"]
+ENTRYPOINT ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:5000", "wsgi:flask_app"]
 
 FROM base as development
-# Using COPY here even though 'docker run' uses --mount. Build fails as cannot find 'pyproject.toml'
-# Is there a better way?
-COPY ./ /home/todo/app
-RUN git clone https://github.com/pyenv/pyenv.git /home/todo/app/.pyenv/ \
-	&& pip install "poetry==$POETRY_VERSION" gunicorn flask flask_wtf \
+
+COPY . .
+RUN pip install "poetry==$POETRY_VERSION" \
 	&& poetry install --no-root \
-	&& chmod +x dev_entry_point.sh
+	&& chmod +x ./dev_entry_point.sh
 	# found chmod behaviour inconsistent. Had to check execute perms on host 1st
 
 EXPOSE 5001
