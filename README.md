@@ -37,10 +37,9 @@ $ cp .env.template .env # (first time only)
 
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
-
   
 
-## Running the App
+## Running the App using Flask
 
   
 
@@ -73,12 +72,114 @@ You should see output similar to the following:
 
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
+## Run the ToDo app in Docker
+
+Git clone the required application into a suitable folder (`./app`)
+```bash
+$ cd ./app
+$ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
+```
+
+Change directory to the app folder and build the Docker image.
+```bash
+cd ./app
+docker build --tag todo-app .
+```
+Now run the ToDo app in Docker.
+```bash
+docker run --rm -p 5000:5000 todo-app \
+    --env SECRET_KEY='secret-key' \
+    --env SECRET_APIKEY='YOUR_API_KEY' \
+    --env SECRET_APITOKEN='YOUR_API_TOKEN' \
+    --env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
+    --name todo-app 
+
+```
+
+To remove the Docker container
+```bash
+ docker container rm todo-app
+ ```
+
+Now run the ToDo app interactivley in Docker.
+```bash
+docker run --rm -p 5000:5000 \
+    --env SECRET_KEY='secret-key' \
+    --env SECRET_APIKEY='YOUR_TRELLO_API_KEY' \
+    --env SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN' \
+    --env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
+    --name todo-app \
+    -it todo-app /bin/bash
+```
+
+## Run the ToDo app in Docker with prod and dev tags
+
+### Common to all:
+Git clone the required application into a suitable folder (`./app`)
+```bash
+$ cd ./app
+$ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
+```
+
+### Docker Compose (recommended)
+
+docker compose up --build
+
+### Docker command
+
+#### Developer container
+
+Change directory to the app folder and build the Development Docker image.
+```bash
+cd ./app
+docker build --target development --tag todo-app:dev .
+```
+
+Now run the Development ToDo app in Docker.
+```bash
+docker run --rm -p 5001:5001 \
+	--mount type=bind,source="$(pwd)"/,target=/home/todo/app \
+	--env-file ./.env \
+	--name todo-app-dev \
+	-it todo-app:dev
+```
+
+To remove the Development Docker container
+```bash
+ docker container rm todo-app-dev
+ ```
+
+#### Production container
+
+Change directory to the app folder and build the Development Docker image.
+```bash
+cd ./app
+docker build --target production --tag todo-app:prod .
+```
+
+Now run the Production ToDo app in Docker.
+```bash
+docker run --rm -d -p 5000:5000 \
+	--env SECRET_KEY='secret-key' \
+	--env SECRET_APIKEY='YOUR_TRELLO_API_KEY' \
+	--env SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN' \
+	--env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
+	--name todo-app-prod \
+	todo-app:prod
+```
+
+To remove the Production Docker container
+```bash
+ docker container rm todo-app-prod
+ ```
+
+
 
 ## Running Developer Tests 
 
 **Running automated tests**
 
-To run all tests, `cd` into '''tests''' folder
+To run all tests, `cd` into 'tests' folder
 
 `poetry run pytest`
 ##

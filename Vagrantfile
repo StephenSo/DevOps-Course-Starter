@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
 	#Step.3 ### mutiple instances in $PATH ???
 	###########################################
 	echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.profile
-	exec "$SHELL"
+	
 	# Validation:
 		# Check that pyenv is in your PATH: ~/which pyenv
 		# Check that pyenv's shims directory is in PATH: echo $PATH | grep --color=auto "$(pyenv root)/shims"

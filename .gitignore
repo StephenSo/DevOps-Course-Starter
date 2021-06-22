@@ -126,4 +126,4 @@ env/
 # Other files & folders
 geckodriver.log
 .vscode/
-.vagrant/
+.vagrant/*
