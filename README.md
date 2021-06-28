@@ -70,92 +70,104 @@ You should see output similar to the following:
 
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
-## Run the ToDo app in Docker
-
-Git clone the required application into a suitable folder (`./app`)
-```bash
-$ cd ./app
-$ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
-```
-
-Change directory to the app folder and build the Docker image.
-```bash
-cd ./app
-docker build --tag todo-app .
-```
-Now run the ToDo app in Docker.
-```bash
-docker run --rm -p 5000:5000 todo-app \
-    --env SECRET_KEY='secret-key' \
-    --env SECRET_APIKEY='YOUR_API_KEY' \
-    --env SECRET_APITOKEN='YOUR_API_TOKEN' \
-    --env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
-    --name todo-app 
-
-```
-
-To remove the Docker container
-```bash
- docker container rm todo-app
- ```
-
-Now run the ToDo app interactivley in Docker.
-```bash
-docker run --rm -p 5000:5000 \
-    --env SECRET_KEY='secret-key' \
-    --env SECRET_APIKEY='YOUR_TRELLO_API_KEY' \
-    --env SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN' \
-    --env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
-    --name todo-app \
-    -it todo-app /bin/bash
-```
-
-## Run the ToDo app in Docker with prod and dev tags
+## Build and run the ToDo app in Docker with prod and dev tags
 
 ### Common to all:
-Git clone the required application into a suitable folder (`./app`)
+Git clone the required application into a suitable folder (`./app`). If deploying prod and dev to different folders, adjust steps accordingly.
+
 ```bash
 $ cd ./app
 $ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
+$ chmod +x ./docker-entrypoint.sh
 ```
-
-### Docker Compose (recommended)
-
-docker compose up --build
-
-### Docker command
-
-#### Developer container
-
+## Build Docker Images
+#### Build Developer image
 Change directory to the app folder and build the Development Docker image.
 ```bash
 cd ./app
 docker build --target development --tag todo-app:dev .
 ```
 
-Now run the Development ToDo app in Docker.
-```bash
-docker run --rm -p 5001:5001 \
-	--mount type=bind,source="$(pwd)"/,target=/home/todo/app \
-	--env-file ./.env \
-	--name todo-app-dev \
-	-it todo-app:dev
-```
-
-To remove the Development Docker container
-```bash
- docker container rm todo-app-dev
- ```
-
-#### Production container
-
-Change directory to the app folder and build the Development Docker image.
+#### Build Production image
+Change directory to the app folder and build the Production Docker image.
 ```bash
 cd ./app
 docker build --target production --tag todo-app:prod .
 ```
 
-Now run the Production ToDo app in Docker.
+
+## Run container from images
+### Docker Compose (recommended)
+
+#### Development
+Edit the file: docker-compose.yaml so that the SECRET* variables have your Trello Board name, key and token.
+
+```yaml
+version: "3"
+services:
+  todo-app-dev:
+    image: todo-app:dev
+    container_name: todo-app-dev
+    environment:
+      - SECRET_KEY=secret-key
+      - SECRET_APIKEY=
+      - SECRET_APITOKEN=
+      - BOARD_NAME=
+    ports:
+      - 5001:5001 #dev port
+    restart: unless-stopped
+```
+
+```bash
+docker-compose up --build
+```
+
+#### Production
+Edit the file: docker-compose.yaml so that the SECRET* variables have your Trello Board name, key and token.
+
+```yaml
+version: "3"
+services:
+  todo-app-prod:
+    image: todo-app:prod
+    container_name: todo-app-production
+    environment:
+      - SECRET_KEY=secret-key
+      - SECRET_APIKEY=
+      - SECRET_APITOKEN=
+      - BOARD_NAME=
+    ports:
+      - 5000:5000 #prod port
+    restart: unless-stopped
+```
+
+```bash
+docker-compose up --build
+```
+
+### Docker command
+Change directory to the app folder.
+```bash
+cd ./app
+```
+
+#### Developer container
+Run the Development ToDo app in Docker with bash ENTRYPOINT.
+
+```bash
+docker run --rm -p 5001:5001 \
+	--mount type=bind,source="$(pwd)"/,target=/home/todo/app \
+	--env SECRET_KEY='secret-key' \
+	--env SECRET_APIKEY='YOUR_TRELLO_API_KEY' \
+	--env SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN' \
+	--env BOARD_NAME='YOUR_TRELLO_BOARD_NAME' \
+	--name todo-app-dev \
+	-it todo-app:dev
+```
+
+#### Production container
+Run the Production ToDo app in Docker.
+
 ```bash
 docker run --rm -d -p 5000:5000 \
 	--env SECRET_KEY='secret-key' \
@@ -165,13 +177,6 @@ docker run --rm -d -p 5000:5000 \
 	--name todo-app-prod \
 	todo-app:prod
 ```
-
-To remove the Production Docker container
-```bash
- docker container rm todo-app-prod
- ```
-
-
 
 ## Running Developer Tests 
 
@@ -197,9 +202,10 @@ To run all tests, `cd` into 'tests' folder
 
 **Integration Test:**
  `poetry run pytest tests/Integration_test.py`
- This tests:
- - `test_index_page` - Validates initial page load. 
- - `test_edititem_page`- Checks updates to items in a list.
+
+ - This tests:
+	 - `test_index_page` - Validates initial page load. 
+	 - `test_edititem_page`- Checks updates to items in a list.
 
 ##
 **End to end tests:**
