@@ -80,7 +80,7 @@ Git clone the required application into a suitable folder (`./app`). If deployin
 ```bash
 $ cd ./app
 $ git clone https://github.com/StephenSo/DevOps-Course-Starter ./
-$ chmod +x ./docker-entrypoint.sh
+$ chmod +x ./dev_entrypoint.sh
 ```
 ## Build Docker Images
 #### Build Developer image

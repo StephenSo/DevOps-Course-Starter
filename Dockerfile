@@ -17,16 +17,13 @@ COPY . .
 RUN git clone https://github.com/pyenv/pyenv.git /home/todo/app/.pyenv/ \
 	&& pip install "poetry==$POETRY_VERSION" \
 	&& poetry install --no-root --no-dev
-
 EXPOSE 5000
 ENTRYPOINT ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:5000", "wsgi:flask_app"]
 
 FROM base as development
 COPY . .
 RUN pip install "poetry==$POETRY_VERSION" \
-	&& poetry install --no-root \
-	&& chmod +x ./dev_entry_point.sh
-	# found chmod behaviour inconsistent. Had to check execute perms on host 1st
+	&& poetry install --no-root
 
 EXPOSE 5001
 ENTRYPOINT ["./dev_entry_point.sh"]
