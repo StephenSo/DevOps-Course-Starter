@@ -127,6 +127,7 @@ env/
 geckodriver.log
 .vscode/
 .vagrant/*
+.gnupg/
 
 ### VSCode
 .vscode/
