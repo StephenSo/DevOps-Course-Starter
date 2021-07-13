@@ -3,11 +3,30 @@ services:
   todo-app-prod:
     image: todo-app:prod
     container_name: todo-app-production
+    #build:
+    #  context: /home/test/app/DevOps-Course-Starter            
     environment:
       - SECRET_KEY=secret-key
-      - SECRET_APIKEY=
-      - SECRET_APITOKEN=
-      - BOARD_NAME=
+      - SECRET_APIKEY='YOUR_TRELLO_API_KEY'
+      - SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN'
+      - BOARD_NAME='YOUR_PROD_TRELLO_BOARD_NAME'
     ports:
       - 5000:5000 #prod port
     restart: unless-stopped
+
+  todo-app-dev:
+    image: todo-app:dev
+    container_name: todo-app-dev
+    #build:
+    #  context: /home/test/app/DevOps-Course-Starter        
+    environment:
+      - SECRET_KEY=secret-key
+      - SECRET_APIKEY='YOUR_TRELLO_API_KEY'
+      - SECRET_APITOKEN='YOUR_TRELLO_API_TOKEN'
+      - BOARD_NAME='YOUR_DEV_TRELLO_BOARD_NAME'
+    volumes:
+        #- .:/home/todo/app
+        - /home/test/app/DevOps-Course-Starter:/home/todo/app
+    ports:
+      - 5001:5001 #dev port
+    restart: unless-stopped    
