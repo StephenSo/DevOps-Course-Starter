@@ -1,3 +1,4 @@
+services:
+  - docker
 script:
-  - echo "hello world"
-  
+  - docker-compose run todo-app-dev
